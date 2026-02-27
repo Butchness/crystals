@@ -17,13 +17,19 @@ public partial class CameraRig : Node3D
 
     public void ResolveTarget()
     {
-        if (TargetPath == null || TargetPath.IsEmpty) return;
+        if (string.IsNullOrWhiteSpace(TargetPath))
+        {
+            _target = null;
+            return;
+        }
+
         _target = GetNodeOrNull<Node3D>(TargetPath);
     }
 
     public override void _Process(double delta)
     {
         if (_target == null) return;
+
         var desired = _target.GlobalPosition + Offset;
         GlobalPosition = GlobalPosition.Lerp(desired, (float)delta * FollowLerp);
         LookAt(_target.GlobalPosition, Vector3.Up);
