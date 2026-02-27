@@ -44,7 +44,7 @@ public partial class Game : Node
         var cameraRig = map.GetNodeOrNull<Node3D>("CameraRig");
         if (cameraRig is CameraRig rig)
         {
-            rig.TargetPath = rig.GetPathTo(player.GetNode<Node3D>("CameraTarget"));
+            rig.TargetPath = rig.GetPathTo(player.GetNode<Node3D>("CameraTarget")).ToString();
             rig.ResolveTarget();
         }
 

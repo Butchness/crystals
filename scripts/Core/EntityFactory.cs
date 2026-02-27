@@ -19,6 +19,7 @@ public partial class EntityFactory : Node
     {
         var def = _database.GetById<CharacterDef>(characterDefId);
         if (def == null || CharacterScene == null) return null;
+
         var character = CharacterScene.Instantiate<Character>();
         character.Def = def;
 
