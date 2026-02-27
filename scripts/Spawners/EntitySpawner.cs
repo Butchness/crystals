@@ -27,8 +27,7 @@ public partial class EntitySpawner : Node3D
     public override void _Ready()
     {
         _factory = GetNode<EntityFactory>("/root/EntityFactory");
-        GD.Print($"[EntitySpawner:{Name}] Ready. def='{CharacterDefId}', mode={Mode}, spawnOnReady={SpawnOnReady}, enabled={Enabled}, total={TotalToSpawn}, maxAlive={MaxAlive}");
-        CallDeferred(nameof(EnableSpawning));
+        if (SpawnOnReady && Enabled) CallDeferred(nameof(TrySpawn));
     }
 
     public override void _Process(double delta)
@@ -47,7 +46,6 @@ public partial class EntitySpawner : Node3D
     private void EnableSpawning()
     {
         _spawningEnabled = true;
-        GD.Print($"[EntitySpawner:{Name}] Spawning enabled. SpawnOnReady={SpawnOnReady}, Enabled={Enabled}");
         if (SpawnOnReady && Enabled) TrySpawn();
     }
 

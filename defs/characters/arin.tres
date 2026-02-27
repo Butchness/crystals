@@ -1,9 +1,13 @@
-[gd_resource type="Resource" script_class="CharacterDef" load_steps=6 format=3]
-[ext_resource type="Script" path="res://scripts/Defs/CharacterDef.cs" id="1"]
+[gd_resource type="Resource" script_class="CharacterDef" load_steps=8 format=3 uid="uid://dhwb21746qvs"]
+
+[ext_resource type="Script" uid="uid://b816awsxvqfp" path="res://scripts/Defs/CharacterDef.cs" id="1"]
+[ext_resource type="Script" uid="uid://4ntaabjmw1x6" path="res://scripts/Defs/AttackDef.cs" id="1_t8hr4"]
 [ext_resource type="PackedScene" path="res://scenes/characters/PlayerBrain.tscn" id="2"]
 [ext_resource type="Resource" path="res://defs/stats/arin_stats.tres" id="3"]
 [ext_resource type="Resource" path="res://defs/inventories/player_inventory.tres" id="4"]
-[ext_resource type="Resource" path="res://defs/attacks/sword_slash.tres" id="5"]
+[ext_resource type="Script" uid="uid://bcqs3mx3mr8d0" path="res://scripts/Defs/ItemDef.cs" id="4_kisvb"]
+[ext_resource type="Resource" uid="uid://cjkhtanm7pvgm" path="res://defs/attacks/sword_slash.tres" id="5"]
+
 [resource]
 script = ExtResource("1")
 Id = "arin"
@@ -13,4 +17,7 @@ BrainType = 1
 Stats = ExtResource("3")
 Inventory = ExtResource("4")
 FactionId = "hero"
-AbilitySet = Array[Resource]([ExtResource("5")])
+AbilitySet = Array[ExtResource("1_t8hr4")]([ExtResource("5")])
+EquipmentSet = Array[ExtResource("4_kisvb")]([])
+VisProfile = ""
+LootId = ""

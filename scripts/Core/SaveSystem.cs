@@ -64,52 +64,10 @@ public partial class SaveSystem : Node
             return new WorldState();
         }
 
-        string json;
-        try
-        {
-            using var file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
-            if (file == null)
-            {
-                GD.PushWarning($"[SaveSystem] Could not open save file for slot {slot}; returning new WorldState.");
-                return new WorldState();
-            }
-
-            json = file.GetAsText();
-        }
-        catch (Exception ex)
-        {
-            GD.PushError($"[SaveSystem] Read failed for slot {slot}: {ex.Message}. Returning new WorldState.");
-            return new WorldState();
-        }
-
-        json = json?.Replace("\0", string.Empty).Trim();
-        if (string.IsNullOrWhiteSpace(json))
-        {
-            GD.PushWarning($"[SaveSystem] Save slot {slot} file is empty/blank; returning new WorldState.");
-            return new WorldState();
-        }
-
-        try
-        {
-            var state = JsonSerializer.Deserialize<WorldState>(json);
-            if (state == null)
-            {
-                GD.PushWarning($"[SaveSystem] Save slot {slot} deserialized to null; returning new WorldState.");
-                return new WorldState();
-            }
-
-            GD.Print($"[SaveSystem] Load complete for slot {slot}.");
-            return state;
-        }
-        catch (JsonException ex)
-        {
-            GD.PushError($"[SaveSystem] Invalid JSON in slot {slot}: {ex.Message}. Returning new WorldState.");
-            return new WorldState();
-        }
-        catch (Exception ex)
-        {
-            GD.PushError($"[SaveSystem] Load failed for slot {slot}: {ex.Message}. Returning new WorldState.");
-            return new WorldState();
-        }
+        using var file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
+        var json = file.GetAsText();
+        var state = JsonSerializer.Deserialize<WorldState>(json) ?? new WorldState();
+        GD.Print($"[SaveSystem] Load complete for slot {slot}.");
+        return state;
     }
 }
