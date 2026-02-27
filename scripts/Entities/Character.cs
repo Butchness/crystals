@@ -37,6 +37,12 @@ public partial class Character : CharacterBody3D, IDamageable
         if (Def != null) ApplyDefinition();
     }
 
+    public void FinalizeSpawn(Vector3 pos, Vector3 rotationDeg)
+    {
+        GlobalPosition = pos;
+        RotationDegrees = rotationDeg;
+        SetupBrain();
+    }
 
     public void SetupBrain()
     {
