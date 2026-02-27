@@ -11,6 +11,7 @@ public partial class Game : Node
     [Export] public string StartingSpawnId { get; set; } = "start";
     [Export] public string StartingScenePath { get; set; } = "res://scenes/maps/Part01.tscn";
     [Export] public string PlayerDefId { get; set; } = "arin";
+    [Export] public bool LoadSaveOnStartup { get; set; } = false;
 
     public WorldState State { get; private set; } = new();
 
