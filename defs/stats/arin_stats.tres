@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="StatsDef" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/Defs/StatsDef.cs" id="1"]
+[resource]
+script = ExtResource("1")
+Id = "arin_stats"
+DisplayName = "Arin Base"
+Health = 120
+Mana = 80
+Speed = 7.0
+JumpSpeed = 9.0

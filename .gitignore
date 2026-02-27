@@ -1,0 +1,18 @@
+# Godot editor/runtime cache
+.godot/
+.import/
+
+# Godot .NET build artifacts
+.mono/
+.nuget/
+**/bin/
+**/obj/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Temporary logs
+*.log

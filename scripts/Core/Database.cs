@@ -40,13 +40,19 @@ public partial class Database : Node
 
     private static void IndexFolder<T>(string path, Dictionary<string, T> map) where T : Resource
     {
-        using var dir = DirAccess.Open(path);
+        var dir = DirAccess.Open(path);
+        if (dir == null)
+        {
+            GD.PushWarning($"Database path not found: {path}");
+            return;
+        }
+
         dir.ListDirBegin();
         while (true)
         {
             var file = dir.GetNext();
             if (string.IsNullOrEmpty(file)) break;
-            if (file.BeginsWith(".") || dir.CurrentIsDir() || !file.EndsWith(".tres")) continue;
+            if (file.StartsWith(".", StringComparison.Ordinal) || dir.CurrentIsDir() || !file.EndsWith(".tres")) continue;
             var res = ResourceLoader.Load<T>($"{path}/{file}");
             if (res == null) continue;
             var id = (string)res.Get("Id");
