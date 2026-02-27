@@ -1,13 +1,51 @@
-[gd_resource type="Resource" script_class="AttackDef" load_steps=2 format=3]
-[ext_resource type="Script" path="res://scripts/Defs/AttackDef.cs" id="1"]
+[gd_resource type="Resource" script_class="AttackDef" load_steps=4 format=3 uid="uid://cjkhtanm7pvgm"]
+
+[ext_resource type="Script" uid="uid://4ntaabjmw1x6" path="res://scripts/Defs/AttackDef.cs" id="1"]
+[ext_resource type="Script" uid="uid://bi4a12o5s6knh" path="res://scripts/Defs/StatsDef.cs" id="1_1ebpk"]
+
+[sub_resource type="Resource" id="Resource_rfy0t"]
+script = ExtResource("1_1ebpk")
+Id = ""
+DisplayName = ""
+Health = 0
+Mana = 0
+Strength = 1
+Willpower = 0
+Agility = 0
+Speed = 0.0
+CritChance = 0.0
+CritMod = 0.0
+HpGen = 0.0
+ManaGen = 0.0
+Cdr = 0.0
+JumpSpeed = 0.0
+Tags = Array[String]([])
+metadata/_custom_type_script = "uid://bi4a12o5s6knh"
+
 [resource]
 script = ExtResource("1")
 Id = "sword_slash"
 DisplayName = "Sword Slash"
+AttackKind = 1
+ElementKind = 0
 BaseDamage = 14.0
+StatScaling = SubResource("Resource_rfy0t")
+CritChance = 0.05
+CritMultiplier = 1.5
 WindupS = 0.12
 ActiveS = 0.18
-Range = 1.8
+CooldownS = 0.5
+LifetimeS = 0.0
+TeamFilter = 3
 HitShape = 3
-Radius = 1.5
+Radius = 2.0
+Width = 1.0
+Length = 1.0
 AngleDeg = 110.0
+Range = 0.5
+HitOriginOffset = Vector3(0, 0, 0)
+MoveType = 3
+Speed = 0.0
+VfxId = ""
+SfxId = ""
+AnimationId = ""

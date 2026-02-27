@@ -20,60 +20,21 @@ public partial class Game : Node
 
     public override async void _Ready()
     {
-        try
-        {
-            GD.Print("[Game] Ready start: wiring services.");
-            _sceneFlow = GetNode<SceneFlow>("/root/SceneFlow");
-            _saveSystem = GetNode<SaveSystem>("/root/SaveSystem");
-            _entityFactory = GetNode<EntityFactory>("/root/EntityFactory");
-            _sceneFlow.SceneLoaded += OnSceneLoaded;
+        GD.Print("[Game] Ready start: wiring services.");
+        _sceneFlow = GetNode<SceneFlow>("/root/SceneFlow");
+        _saveSystem = GetNode<SaveSystem>("/root/SaveSystem");
+        _entityFactory = GetNode<EntityFactory>("/root/EntityFactory");
+        _sceneFlow.SceneLoaded += OnSceneLoaded;
 
-            GD.Print("[Game] Loading world state from slot 0.");
-            var savePath = "user://save_0.json";
-            if (!FileAccess.FileExists(savePath))
-            {
-                GD.Print("[Game] No save file found for slot 0; using default WorldState.");
-                State = new WorldState();
-            }
-            else
-            {
-                try
-                {
-                    State = _saveSystem.Load(0);
-                    GD.Print("[Game] World state loaded successfully.");
-                }
-                catch (System.Exception ex)
-                {
-                    GD.PushError($"[Game] Load threw unexpectedly: {ex.Message}. Falling back to new WorldState.");
-                    State = new WorldState();
-                }
-            }
-
-            var scenePath = StartingScenePath;
-            if (string.IsNullOrWhiteSpace(scenePath) || !ResourceLoader.Exists(scenePath))
-            {
-                GD.PushWarning($"[Game] StartingScenePath is invalid ('{scenePath}'). Falling back to default Part01.");
-                scenePath = "res://scenes/maps/Part01.tscn";
-            }
-
-            GD.Print($"[Game] Changing map to {scenePath} (mapId={StartingMapId}, spawnId={StartingSpawnId}).");
-            await _sceneFlow.ChangeMap(scenePath, StartingMapId, StartingSpawnId);
-            GD.Print("[Game] ChangeMap awaited successfully.");
-        }
-        catch (System.Exception ex)
-        {
-            GD.PushError($"[Game] Unhandled exception during _Ready: {ex.Message}");
-        }
+        GD.Print("[Game] Loading world state from slot 0.");
+        State = _saveSystem.Load(0);
+        GD.Print($"[Game] Changing map to {StartingScenePath} (mapId={StartingMapId}, spawnId={StartingSpawnId}).");
+        await _sceneFlow.ChangeMap(StartingScenePath, StartingMapId, StartingSpawnId);
     }
 
     private void OnSceneLoaded(string mapId, string spawnId)
     {
-        GD.Print($"[Game] SceneLoaded received: mapId={mapId}, spawnId={spawnId}. Deferring player spawn.");
-        CallDeferred(nameof(SpawnPlayerForLoadedScene), mapId, spawnId);
-    }
-
-    private void SpawnPlayerForLoadedScene(string mapId, string spawnId)
-    {
+        GD.Print($"[Game] SceneLoaded received: mapId={mapId}, spawnId={spawnId}");
         var map = GetTree().CurrentScene as MapRoot;
         if (map == null)
         {
@@ -92,14 +53,12 @@ public partial class Game : Node
             GD.PushWarning("[Game] Player spawn failed.");
             return;
         }
-
         GD.Print($"[Game] Player spawned with EntityId={player.EntityId}.");
 
         var cameraRig = map.GetNodeOrNull<Node3D>("CameraRig");
         if (cameraRig is CameraRig rig)
         {
-            rig.TargetPath = rig.GetPathTo(player.GetNode<Node3D>("CameraTarget"));
-            GD.Print($"[Game] CameraRig target path set to '{rig.TargetPath}'.");
+            rig.TargetPath = rig.GetPathTo(player.GetNode<Node3D>("CameraTarget")).ToString();
             rig.ResolveTarget();
         }
 

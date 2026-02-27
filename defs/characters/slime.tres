@@ -1,9 +1,11 @@
-[gd_resource type="Resource" script_class="CharacterDef" load_steps=6 format=3]
-[ext_resource type="Script" path="res://scripts/Defs/CharacterDef.cs" id="1"]
+[gd_resource type="Resource" script_class="CharacterDef" load_steps=6 format=3 uid="uid://bbbl1mdc2k71a"]
+
+[ext_resource type="Script" uid="uid://b816awsxvqfp" path="res://scripts/Defs/CharacterDef.cs" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/characters/AIBrain.tscn" id="2"]
 [ext_resource type="Resource" path="res://defs/stats/slime_stats.tres" id="3"]
 [ext_resource type="Resource" path="res://defs/inventories/player_inventory.tres" id="4"]
 [ext_resource type="Resource" path="res://defs/attacks/sword_slash.tres" id="5"]
+
 [resource]
 script = ExtResource("1")
 Id = "slime"
@@ -13,4 +15,7 @@ BrainType = 2
 Stats = ExtResource("3")
 Inventory = ExtResource("4")
 FactionId = "enemy"
-AbilitySet = Array[Resource]([ExtResource("5")])
+AbilitySet = [ExtResource("5")]
+EquipmentSet = []
+VisProfile = ""
+LootId = ""
