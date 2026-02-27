@@ -4,7 +4,7 @@ namespace CrystalsOfLiora.Maps;
 
 public partial class CameraRig : Node3D
 {
-    [Export] public NodePath TargetPath { get; set; }
+    [Export] public string TargetPath { get; set; } = string.Empty;
     [Export] public Vector3 Offset { get; set; } = new(8, 10, 8);
     [Export] public float FollowLerp { get; set; } = 8f;
 
@@ -17,12 +17,7 @@ public partial class CameraRig : Node3D
 
     public void ResolveTarget()
     {
-        if (TargetPath == null || TargetPath.IsEmpty)
-        {
-            _target = null;
-            return;
-        }
-
+        if (TargetPath == null || TargetPath.IsEmpty) return;
         _target = GetNodeOrNull<Node3D>(TargetPath);
     }
 
