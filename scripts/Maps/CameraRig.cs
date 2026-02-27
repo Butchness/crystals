@@ -17,7 +17,8 @@ public partial class CameraRig : Node3D
 
     public void ResolveTarget()
     {
-        if (!TargetPath.IsEmpty) _target = GetNodeOrNull<Node3D>(TargetPath);
+        if (TargetPath == null || TargetPath.IsEmpty) return;
+        _target = GetNodeOrNull<Node3D>(TargetPath);
     }
 
     public override void _Process(double delta)

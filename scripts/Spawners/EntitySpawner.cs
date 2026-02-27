@@ -26,7 +26,7 @@ public partial class EntitySpawner : Node3D
     public override void _Ready()
     {
         _factory = GetNode<EntityFactory>("/root/EntityFactory");
-        if (SpawnOnReady && Enabled) TrySpawn();
+        if (SpawnOnReady && Enabled) CallDeferred(nameof(TrySpawn));
     }
 
     public override void _Process(double delta)
