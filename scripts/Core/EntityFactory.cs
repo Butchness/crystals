@@ -21,11 +21,11 @@ public partial class EntityFactory : Node
         if (def == null || CharacterScene == null) return null;
         var character = CharacterScene.Instantiate<Character>();
         character.Def = def;
-        character.GlobalPosition = pos;
-        character.RotationDegrees = rotationDeg;
 
         (parent ?? GetTree().CurrentScene).AddChild(character);
-        character.CallDeferred(MethodName.SetupBrain);
+        character.GlobalPosition = pos;
+        character.RotationDegrees = rotationDeg;
+        character.CallDeferred(Character.MethodName.SetupBrain);
         return character;
     }
 }
