@@ -20,26 +20,15 @@ public partial class EntityFactory : Node
     {
         GD.Print($"[EntityFactory] Spawn requested: def='{characterDefId}', pos={pos}, rot={rotationDeg}");
         var def = _database.GetById<CharacterDef>(characterDefId);
-        if (def == null)
-        {
-            GD.PushWarning($"[EntityFactory] Character definition not found: '{characterDefId}'");
-            return null;
-        }
-
-        if (CharacterScene == null)
-        {
-            GD.PushWarning("[EntityFactory] CharacterScene is null; spawn aborted.");
-            return null;
-        }
+        if (def == null || CharacterScene == null) return null;
 
         var character = CharacterScene.Instantiate<Character>();
         character.Def = def;
 
-        var targetParent = parent ?? GetTree().CurrentScene;
-        GD.Print($"[EntityFactory] Deferring add_child to parent '{targetParent?.Name ?? "<null>"}' for entity '{character.EntityId}'.");
-        targetParent.CallDeferred(Node.MethodName.AddChild, character);
-        GD.Print($"[EntityFactory] Deferring FinalizeSpawn for entity '{character.EntityId}'.");
-        character.CallDeferred(Character.MethodName.FinalizeSpawn, pos, rotationDeg);
+        (parent ?? GetTree().CurrentScene).AddChild(character);
+        character.GlobalPosition = pos;
+        character.RotationDegrees = rotationDeg;
+        character.CallDeferred(Character.MethodName.SetupBrain);
         return character;
     }
 }
