@@ -11,13 +11,12 @@ public partial class PlayerBrain : Node
 
     public override void _Ready()
     {
-        GD.Print("[PlayerBrain] Ready: resolving character reference.");
         _character = GetNodeOrNull<Character>(CharacterPath);
         if (_character == null)
             _character = GetParent()?.GetParent()?.GetParent() as Character;
         if (_character == null)
         {
-            GD.PushWarning($"[PlayerBrain] Could not resolve Character at path '{CharacterPath}'");
+            GD.PushWarning($"PlayerBrain could not resolve Character at path '{CharacterPath}'");
             return;
         }
 

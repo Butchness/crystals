@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3]
-[ext_resource type="Script" path="res://scripts/Core/SceneFlow.cs" id="1"]
+[gd_scene load_steps=2 format=3 uid="uid://pf0ruwd3cjap"]
+
+[ext_resource type="Script" uid="uid://kfhcow44ljtg" path="res://scripts/Core/SceneFlow.cs" id="1"]
+
 [node name="SceneFlow" type="Node"]
 script = ExtResource("1")

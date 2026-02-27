@@ -14,16 +14,13 @@ public partial class AIBrain : Node
 
     public override void _Ready()
     {
-        GD.Print("[AIBrain] Ready: resolving character reference.");
         _character = GetNodeOrNull<Character>(CharacterPath);
         if (_character == null)
             _character = GetParent()?.GetParent()?.GetParent() as Character;
 
         _timer = WanderIntervalS;
         if (_character == null)
-            GD.PushWarning($"[AIBrain] Could not resolve Character at path '{CharacterPath}'");
-        else
-            GD.Print($"[AIBrain] Bound to Character EntityId={_character.EntityId}.");
+            GD.PushWarning($"AIBrain could not resolve Character at path '{CharacterPath}'");
     }
 
     public override void _PhysicsProcess(double delta)
