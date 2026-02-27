@@ -1,34 +1,60 @@
-[gd_scene load_steps=6 format=3]
-[ext_resource type="Script" path="res://scripts/Maps/MapRoot.cs" id="1"]
-[ext_resource type="Script" path="res://scripts/Maps/SpawnPoint.cs" id="2"]
+[gd_scene load_steps=6 format=3 uid="uid://bc15ns6uytvg4"]
+
+[ext_resource type="Script" uid="uid://basn552u2lapr" path="res://scripts/Maps/MapRoot.cs" id="1"]
+[ext_resource type="Script" uid="uid://wgsomux066t1" path="res://scripts/Maps/SpawnPoint.cs" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/spawners/EntitySpawner.tscn" id="3"]
-[ext_resource type="Script" path="res://scripts/Maps/CameraRig.cs" id="4"]
+[ext_resource type="Script" uid="uid://ctbqk0a673tsy" path="res://scripts/Maps/CameraRig.cs" id="4"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_c75h4"]
+size = Vector2(100, 100)
 
 [node name="Part01" type="Node3D"]
 script = ExtResource("1")
 MapId = "part_01"
+PersistEnabled = null
 
 [node name="Environment" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Environment"]
+mesh = SubResource("PlaneMesh_c75h4")
+
 [node name="SpawnPoints" type="Node3D" parent="."]
+
 [node name="Start" type="Node3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.747534, 0)
 script = ExtResource("2")
 SpawnId = "start"
+FacePlayerOnSpawn = null
 FacingYawDeg = 45.0
 
 [node name="Entities" type="Node3D" parent="."]
+
 [node name="VFX" type="Node3D" parent="."]
+
 [node name="Interactables" type="Node3D" parent="."]
+
 [node name="Spawners" type="Node" parent="."]
+
 [node name="EnemySpawner" parent="Spawners" instance=ExtResource("3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.955379, 0.840946, 0)
 CharacterDefId = "slime"
-SpawnOnReady = true
+Mode = null
+Bucket = null
+Enabled = null
+SpawnOnReady = null
+PlayerRange = null
 TotalToSpawn = 3
+MaxAlive = null
+Stock = null
 RespawnDelayS = 7.0
-GlobalPosition = Vector3(4, 0, 4)
+RequireClearSpawnArea = null
 
 [node name="CameraRig" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.683903, 0)
 script = ExtResource("4")
+TargetPath = null
 Offset = Vector3(8, 11, 8)
+FollowLerp = null
 
 [node name="Camera3D" type="Camera3D" parent="CameraRig"]
 current = true
