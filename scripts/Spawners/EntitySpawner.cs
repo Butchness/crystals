@@ -51,16 +51,39 @@ public partial class EntitySpawner : Node3D
 
     private void TrySpawn()
     {
-        if (Mode == SpawnMode.FixedCount && _spawnedTotal >= TotalToSpawn) return;
-        if (_alive >= MaxAlive) return;
-        if (Mode == SpawnMode.Stocked && Stock <= 0) return;
+        if (Mode == SpawnMode.FixedCount && _spawnedTotal >= TotalToSpawn)
+        {
+            GD.Print($"[EntitySpawner:{Name}] Skip spawn: fixed count reached ({_spawnedTotal}/{TotalToSpawn}).");
+            return;
+        }
+        if (_alive >= MaxAlive)
+        {
+            GD.Print($"[EntitySpawner:{Name}] Skip spawn: max alive reached ({_alive}/{MaxAlive}).");
+            return;
+        }
+        if (Mode == SpawnMode.Stocked && Stock <= 0)
+        {
+            GD.Print($"[EntitySpawner:{Name}] Skip spawn: stock exhausted.");
+            return;
+        }
 
+        GD.Print($"[EntitySpawner:{Name}] Attempting spawn of '{CharacterDefId}' at {GlobalPosition}.");
         var character = _factory.SpawnEntity(CharacterDefId, GlobalPosition, RotationDegrees, GetParent());
-        if (character == null) return;
+        if (character == null)
+        {
+            GD.PushWarning($"[EntitySpawner:{Name}] SpawnEntity returned null for def '{CharacterDefId}'.");
+            return;
+        }
 
         _alive++;
         _spawnedTotal++;
         if (Mode == SpawnMode.Stocked) Stock--;
-        character.CharacterDied += _ => { _alive = Mathf.Max(0, _alive - 1); _respawnTimer = RespawnDelayS; };
+        GD.Print($"[EntitySpawner:{Name}] Spawned entity '{character.EntityId}'. alive={_alive}, totalSpawned={_spawnedTotal}, stock={Stock}");
+        character.CharacterDied += _ =>
+        {
+            _alive = Mathf.Max(0, _alive - 1);
+            _respawnTimer = RespawnDelayS;
+            GD.Print($"[EntitySpawner:{Name}] Entity died. alive={_alive}. Respawn timer set to {RespawnDelayS}s.");
+        };
     }
 }

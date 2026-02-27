@@ -21,6 +21,7 @@ public partial class PlayerBrain : Node
         }
 
         _character.AddToGroup("player");
+        GD.Print($"[PlayerBrain] Bound to Character EntityId={_character.EntityId} and added to player group.");
     }
 
     public override void _PhysicsProcess(double delta)

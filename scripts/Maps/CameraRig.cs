@@ -12,6 +12,7 @@ public partial class CameraRig : Node3D
 
     public override void _Ready()
     {
+        GD.Print($"[CameraRig] Ready. TargetPath='{TargetPath}', Offset={Offset}, FollowLerp={FollowLerp}");
         ResolveTarget();
     }
 
