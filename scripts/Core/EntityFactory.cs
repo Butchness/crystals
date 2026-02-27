@@ -25,7 +25,7 @@ public partial class EntityFactory : Node
         character.RotationDegrees = rotationDeg;
 
         (parent ?? GetTree().CurrentScene).AddChild(character);
-        character.CallDeferred(MethodName.SetupBrain);
+        character.CallDeferred(Character.MethodName.SetupBrain);
         return character;
     }
 }
