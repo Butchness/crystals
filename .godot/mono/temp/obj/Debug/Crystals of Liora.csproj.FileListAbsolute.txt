@@ -1,0 +1,6 @@
+C:\Users\tlbutcher24\Desktop\The Lost Legacy\Games\New folder\.godot\mono\temp\obj\Debug\Crystals of Liora.csproj.AssemblyReference.cache
+C:\Users\tlbutcher24\Desktop\The Lost Legacy\Games\New folder\.godot\mono\temp\obj\Debug\Crystals of Liora.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\tlbutcher24\Desktop\The Lost Legacy\Games\New folder\.godot\mono\temp\obj\Debug\Crystals of Liora.AssemblyInfoInputs.cache
+C:\Users\tlbutcher24\Desktop\The Lost Legacy\Games\New folder\.godot\mono\temp\obj\Debug\Crystals of Liora.AssemblyInfo.cs
+C:\Users\tlbutcher24\Desktop\The Lost Legacy\Games\New folder\.godot\mono\temp\obj\Debug\Crystals of Liora.csproj.CoreCompileInputs.cache
+C:\Users\tlbutcher24\Desktop\The Lost Legacy\Games\New folder\.godot\mono\temp\obj\Debug\Crystals of Liora.sourcelink.json
