@@ -19,13 +19,13 @@ public partial class EntityFactory : Node
     {
         var def = _database.GetById<CharacterDef>(characterDefId);
         if (def == null || CharacterScene == null) return null;
+
         var character = CharacterScene.Instantiate<Character>();
         character.Def = def;
-        character.GlobalPosition = pos;
-        character.RotationDegrees = rotationDeg;
 
-        (parent ?? GetTree().CurrentScene).AddChild(character);
-        character.CallDeferred(MethodName.SetupBrain);
+        var targetParent = parent ?? GetTree().CurrentScene;
+        targetParent.CallDeferred(Node.MethodName.AddChild, character);
+        character.CallDeferred(Character.MethodName.FinalizeSpawn, pos, rotationDeg);
         return character;
     }
 }
