@@ -34,6 +34,13 @@ public partial class SaveSystem : Node
             var path = $"user://save_{slot}.json";
             GD.Print($"[SaveSystem] Saving slot {slot} to {path}.");
             using var file = FileAccess.Open(path, FileAccess.ModeFlags.Write);
+            if (file == null)
+            {
+                GD.PushError($"[SaveSystem] Save failed for slot {slot}: could not open file.");
+                EmitSignal(SignalName.SaveCompleted, slot, false, "Could not open save file for writing.");
+                return false;
+            }
+
             file.StoreString(JsonSerializer.Serialize(state));
             EmitSignal(SignalName.SaveCompleted, slot, true, string.Empty);
             GD.Print($"[SaveSystem] Save completed for slot {slot}.");
