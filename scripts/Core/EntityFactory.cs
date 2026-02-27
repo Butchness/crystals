@@ -13,10 +13,12 @@ public partial class EntityFactory : Node
     public override void _Ready()
     {
         _database = GetNode<Database>("/root/Database");
+        GD.Print("[EntityFactory] Ready and linked to /root/Database.");
     }
 
     public Character SpawnEntity(string characterDefId, Vector3 pos, Vector3 rotationDeg, Node parent = null)
     {
+        GD.Print($"[EntityFactory] Spawn requested: def='{characterDefId}', pos={pos}, rot={rotationDeg}");
         var def = _database.GetById<CharacterDef>(characterDefId);
         if (def == null || CharacterScene == null) return null;
 
