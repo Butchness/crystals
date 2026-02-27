@@ -57,24 +57,10 @@ public partial class SaveSystem : Node
             return new WorldState();
         }
 
-        try
-        {
-            using var file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
-            var json = file.GetAsText();
-            if (string.IsNullOrWhiteSpace(json))
-            {
-                GD.PushWarning($"[SaveSystem] Save slot {slot} file is empty; returning new WorldState.");
-                return new WorldState();
-            }
-
-            var state = JsonSerializer.Deserialize<WorldState>(json) ?? new WorldState();
-            GD.Print($"[SaveSystem] Load complete for slot {slot}.");
-            return state;
-        }
-        catch (Exception ex)
-        {
-            GD.PushError($"[SaveSystem] Load failed for slot {slot}: {ex.Message}. Returning new WorldState.");
-            return new WorldState();
-        }
+        using var file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
+        var json = file.GetAsText();
+        var state = JsonSerializer.Deserialize<WorldState>(json) ?? new WorldState();
+        GD.Print($"[SaveSystem] Load complete for slot {slot}.");
+        return state;
     }
 }
