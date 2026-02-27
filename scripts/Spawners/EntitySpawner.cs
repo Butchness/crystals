@@ -22,16 +22,17 @@ public partial class EntitySpawner : Node3D
     private int _spawnedTotal;
     private int _alive;
     private float _respawnTimer;
+    private bool _spawningEnabled;
 
     public override void _Ready()
     {
         _factory = GetNode<EntityFactory>("/root/EntityFactory");
-        if (SpawnOnReady && Enabled) TrySpawn();
+        CallDeferred(nameof(EnableSpawning));
     }
 
     public override void _Process(double delta)
     {
-        if (!Enabled) return;
+        if (!Enabled || !_spawningEnabled) return;
         if (PlayerRange >= 0)
         {
             var player = GetTree().GetFirstNodeInGroup("player") as Node3D;
@@ -40,6 +41,12 @@ public partial class EntitySpawner : Node3D
 
         _respawnTimer -= (float)delta;
         if (_respawnTimer <= 0) TrySpawn();
+    }
+
+    private void EnableSpawning()
+    {
+        _spawningEnabled = true;
+        if (SpawnOnReady && Enabled) TrySpawn();
     }
 
     private void TrySpawn()
