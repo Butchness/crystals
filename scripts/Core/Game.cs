@@ -34,12 +34,7 @@ public partial class Game : Node
 
     private void OnSceneLoaded(string mapId, string spawnId)
     {
-        GD.Print($"[Game] SceneLoaded received: mapId={mapId}, spawnId={spawnId}. Deferring player spawn.");
-        CallDeferred(nameof(SpawnPlayerForLoadedScene), mapId, spawnId);
-    }
-
-    private void SpawnPlayerForLoadedScene(string mapId, string spawnId)
-    {
+        GD.Print($"[Game] SceneLoaded received: mapId={mapId}, spawnId={spawnId}");
         var map = GetTree().CurrentScene as MapRoot;
         if (map == null)
         {
@@ -58,14 +53,12 @@ public partial class Game : Node
             GD.PushWarning("[Game] Player spawn failed.");
             return;
         }
-
         GD.Print($"[Game] Player spawned with EntityId={player.EntityId}.");
 
         var cameraRig = map.GetNodeOrNull<Node3D>("CameraRig");
         if (cameraRig is CameraRig rig)
         {
-            rig.TargetPath = rig.GetPathTo(player.GetNode<Node3D>("CameraTarget"));
-            GD.Print($"[Game] CameraRig target path set to '{rig.TargetPath}'.");
+            rig.TargetPath = rig.GetPathTo(player.GetNode<Node3D>("CameraTarget")).ToString();
             rig.ResolveTarget();
         }
 
