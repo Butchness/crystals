@@ -4,7 +4,7 @@ namespace CrystalsOfLiora.Entities;
 
 public partial class AIBrain : Node
 {
-    [Export] public NodePath CharacterPath { get; set; } = "../..";
+    [Export] public NodePath CharacterPath { get; set; } = "../../..";
     [Export] public float WanderIntervalS { get; set; } = 2f;
 
     private Character _character;
@@ -14,12 +14,22 @@ public partial class AIBrain : Node
 
     public override void _Ready()
     {
-        _character = GetNode<Character>(CharacterPath);
+        GD.Print("[AIBrain] Ready: resolving character reference.");
+        _character = GetNodeOrNull<Character>(CharacterPath);
+        if (_character == null)
+            _character = GetParent()?.GetParent()?.GetParent() as Character;
+
         _timer = WanderIntervalS;
+        if (_character == null)
+            GD.PushWarning($"[AIBrain] Could not resolve Character at path '{CharacterPath}'");
+        else
+            GD.Print($"[AIBrain] Bound to Character EntityId={_character.EntityId}.");
     }
 
     public override void _PhysicsProcess(double delta)
     {
+        if (_character == null) return;
+
         _timer -= (float)delta;
         if (_timer <= 0)
         {

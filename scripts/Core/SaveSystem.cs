@@ -22,6 +22,7 @@ public partial class SaveSystem : Node
         if (_autosaveTimer >= AutosaveIntervalS)
         {
             _autosaveTimer = 0;
+            GD.Print("[SaveSystem] Autosave interval reached; saving slot 0.");
             Save(0, new WorldState());
         }
     }
@@ -31,14 +32,24 @@ public partial class SaveSystem : Node
         try
         {
             var path = $"user://save_{slot}.json";
+            GD.Print($"[SaveSystem] Saving slot {slot} to {path}.");
             using var file = FileAccess.Open(path, FileAccess.ModeFlags.Write);
+            if (file == null)
+            {
+                GD.PushError($"[SaveSystem] Save failed for slot {slot}: could not open file.");
+                EmitSignal(SignalName.SaveCompleted, slot, false, "Could not open save file for writing.");
+                return false;
+            }
+
             file.StoreString(JsonSerializer.Serialize(state));
             EmitSignal(SignalName.SaveCompleted, slot, true, string.Empty);
+            GD.Print($"[SaveSystem] Save completed for slot {slot}.");
             return true;
         }
         catch (Exception ex)
         {
             EmitSignal(SignalName.SaveCompleted, slot, false, ex.Message);
+            GD.PushError($"[SaveSystem] Save failed for slot {slot}: {ex.Message}");
             return false;
         }
     }
@@ -46,9 +57,59 @@ public partial class SaveSystem : Node
     public WorldState Load(int slot)
     {
         var path = $"user://save_{slot}.json";
-        if (!FileAccess.FileExists(path)) return new WorldState();
-        using var file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
-        var json = file.GetAsText();
-        return JsonSerializer.Deserialize<WorldState>(json) ?? new WorldState();
+        GD.Print($"[SaveSystem] Loading slot {slot} from {path}.");
+        if (!FileAccess.FileExists(path))
+        {
+            GD.Print($"[SaveSystem] No save file for slot {slot}; returning new WorldState.");
+            return new WorldState();
+        }
+
+        string json;
+        try
+        {
+            using var file = FileAccess.Open(path, FileAccess.ModeFlags.Read);
+            if (file == null)
+            {
+                GD.PushWarning($"[SaveSystem] Could not open save file for slot {slot}; returning new WorldState.");
+                return new WorldState();
+            }
+
+            json = file.GetAsText();
+        }
+        catch (Exception ex)
+        {
+            GD.PushError($"[SaveSystem] Read failed for slot {slot}: {ex.Message}. Returning new WorldState.");
+            return new WorldState();
+        }
+
+        json = json?.Replace("\0", string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            GD.PushWarning($"[SaveSystem] Save slot {slot} file is empty/blank; returning new WorldState.");
+            return new WorldState();
+        }
+
+        try
+        {
+            var state = JsonSerializer.Deserialize<WorldState>(json);
+            if (state == null)
+            {
+                GD.PushWarning($"[SaveSystem] Save slot {slot} deserialized to null; returning new WorldState.");
+                return new WorldState();
+            }
+
+            GD.Print($"[SaveSystem] Load complete for slot {slot}.");
+            return state;
+        }
+        catch (JsonException ex)
+        {
+            GD.PushError($"[SaveSystem] Invalid JSON in slot {slot}: {ex.Message}. Returning new WorldState.");
+            return new WorldState();
+        }
+        catch (Exception ex)
+        {
+            GD.PushError($"[SaveSystem] Load failed for slot {slot}: {ex.Message}. Returning new WorldState.");
+            return new WorldState();
+        }
     }
 }
