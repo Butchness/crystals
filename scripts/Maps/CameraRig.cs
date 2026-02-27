@@ -17,7 +17,7 @@ public partial class CameraRig : Node3D
 
     public void ResolveTarget()
     {
-        if (string.IsNullOrWhiteSpace(TargetPath)) return;
+        if (TargetPath == null || TargetPath.IsEmpty) return;
         _target = GetNodeOrNull<Node3D>(TargetPath);
     }
 
