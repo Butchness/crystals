@@ -1,0 +1,61 @@
+using Godot;
+using System;
+using System.Collections.Generic;
+using CrystalsOfLiora.Defs;
+
+namespace CrystalsOfLiora.Core;
+
+public partial class Database : Node
+{
+    [Export] public string ItemsPath { get; set; } = "res://defs/items";
+    [Export] public string CharactersPath { get; set; } = "res://defs/characters";
+    [Export] public string AttacksPath { get; set; } = "res://defs/attacks";
+    [Export] public string EffectsPath { get; set; } = "res://defs/effects";
+    [Export] public string InventoriesPath { get; set; } = "res://defs/inventories";
+
+    private readonly Dictionary<string, ItemDef> _items = new();
+    private readonly Dictionary<string, CharacterDef> _characters = new();
+    private readonly Dictionary<string, AttackDef> _attacks = new();
+    private readonly Dictionary<string, EffectDef> _effects = new();
+    private readonly Dictionary<string, InventoryDef> _inventories = new();
+
+    public override void _Ready()
+    {
+        IndexFolder(ItemsPath, _items);
+        IndexFolder(CharactersPath, _characters);
+        IndexFolder(AttacksPath, _attacks);
+        IndexFolder(EffectsPath, _effects);
+        IndexFolder(InventoriesPath, _inventories);
+    }
+
+    public T GetById<T>(string id) where T : Resource => typeof(T).Name switch
+    {
+        nameof(ItemDef) => _items.GetValueOrDefault(id) as T,
+        nameof(CharacterDef) => _characters.GetValueOrDefault(id) as T,
+        nameof(AttackDef) => _attacks.GetValueOrDefault(id) as T,
+        nameof(EffectDef) => _effects.GetValueOrDefault(id) as T,
+        nameof(InventoryDef) => _inventories.GetValueOrDefault(id) as T,
+        _ => null
+    };
+
+    private static void IndexFolder<T>(string path, Dictionary<string, T> map) where T : Resource
+    {
+        using var dir = DirAccess.Open(path);
+        dir.ListDirBegin();
+        while (true)
+        {
+            var file = dir.GetNext();
+            if (string.IsNullOrEmpty(file)) break;
+            if (file.BeginsWith(".") || dir.CurrentIsDir() || !file.EndsWith(".tres")) continue;
+            var res = ResourceLoader.Load<T>($"{path}/{file}");
+            if (res == null) continue;
+            var id = (string)res.Get("Id");
+            if (string.IsNullOrEmpty(id))
+            {
+                GD.PushWarning($"Missing id for resource {path}/{file}");
+                continue;
+            }
+            if (!map.TryAdd(id, res)) GD.PushError($"Duplicate id '{id}' in {path}");
+        }
+    }
+}
