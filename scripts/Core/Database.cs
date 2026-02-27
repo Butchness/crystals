@@ -21,25 +21,34 @@ public partial class Database : Node
 
     public override void _Ready()
     {
-        IndexFolder(ItemsPath, _items);
-        IndexFolder(CharactersPath, _characters);
-        IndexFolder(AttacksPath, _attacks);
-        IndexFolder(EffectsPath, _effects);
-        IndexFolder(InventoriesPath, _inventories);
+        GD.Print("[Database] Initializing definition indexes...");
+        IndexFolder(ItemsPath, _items, nameof(ItemDef));
+        IndexFolder(CharactersPath, _characters, nameof(CharacterDef));
+        IndexFolder(AttacksPath, _attacks, nameof(AttackDef));
+        IndexFolder(EffectsPath, _effects, nameof(EffectDef));
+        IndexFolder(InventoriesPath, _inventories, nameof(InventoryDef));
+        GD.Print($"[Database] Ready. Loaded Items={_items.Count}, Characters={_characters.Count}, Attacks={_attacks.Count}, Effects={_effects.Count}, Inventories={_inventories.Count}");
     }
 
-    public T GetById<T>(string id) where T : Resource => typeof(T).Name switch
+    public T GetById<T>(string id) where T : Resource
     {
-        nameof(ItemDef) => _items.GetValueOrDefault(id) as T,
-        nameof(CharacterDef) => _characters.GetValueOrDefault(id) as T,
-        nameof(AttackDef) => _attacks.GetValueOrDefault(id) as T,
-        nameof(EffectDef) => _effects.GetValueOrDefault(id) as T,
-        nameof(InventoryDef) => _inventories.GetValueOrDefault(id) as T,
-        _ => null
-    };
+        var result = typeof(T).Name switch
+        {
+            nameof(ItemDef) => _items.GetValueOrDefault(id) as T,
+            nameof(CharacterDef) => _characters.GetValueOrDefault(id) as T,
+            nameof(AttackDef) => _attacks.GetValueOrDefault(id) as T,
+            nameof(EffectDef) => _effects.GetValueOrDefault(id) as T,
+            nameof(InventoryDef) => _inventories.GetValueOrDefault(id) as T,
+            _ => null
+        };
 
-    private static void IndexFolder<T>(string path, Dictionary<string, T> map) where T : Resource
+        GD.Print($"[Database] GetById<{typeof(T).Name}>('{id}') => {(result == null ? "MISS" : "HIT")}");
+        return result;
+    }
+
+    private static void IndexFolder<T>(string path, Dictionary<string, T> map, string label) where T : Resource
     {
+        GD.Print($"[Database] Indexing {label} from {path}");
         var dir = DirAccess.Open(path);
         if (dir == null)
         {
@@ -47,6 +56,7 @@ public partial class Database : Node
             return;
         }
 
+        var loaded = 0;
         dir.ListDirBegin();
         while (true)
         {
@@ -62,6 +72,9 @@ public partial class Database : Node
                 continue;
             }
             if (!map.TryAdd(id, res)) GD.PushError($"Duplicate id '{id}' in {path}");
+            else loaded++;
         }
+
+        GD.Print($"[Database] Indexed {loaded} {label} definition(s) from {path}");
     }
 }
