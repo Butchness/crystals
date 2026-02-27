@@ -23,9 +23,10 @@ public partial class EntityFactory : Node
         var character = CharacterScene.Instantiate<Character>();
         character.Def = def;
 
-        var targetParent = parent ?? GetTree().CurrentScene;
-        targetParent.CallDeferred(Node.MethodName.AddChild, character);
-        character.CallDeferred(Character.MethodName.FinalizeSpawn, pos, rotationDeg);
+        (parent ?? GetTree().CurrentScene).AddChild(character);
+        character.GlobalPosition = pos;
+        character.RotationDegrees = rotationDeg;
+        character.CallDeferred(Character.MethodName.SetupBrain);
         return character;
     }
 }
