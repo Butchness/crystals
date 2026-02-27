@@ -31,23 +31,38 @@ public partial class Character : CharacterBody3D, IDamageable
 
     public override void _Ready()
     {
+        GD.Print($"[Character:{EntityId}] Ready. DefId={Def?.Id ?? "<null>"}");
         _stats = GetNode<StatsComponent>(StatsPath);
         _inventory = GetNode<InventoryComponent>(InventoryPath);
         _equipment = GetNode<EquipmentComponent>(EquipmentPath);
         if (Def != null) ApplyDefinition();
     }
 
+    public void FinalizeSpawn(Vector3 pos, Vector3 rotationDeg)
+    {
+        GlobalPosition = pos;
+        RotationDegrees = rotationDeg;
+        SetupBrain();
+    }
 
     public void SetupBrain()
     {
-        if (Def?.BrainScene == null) return;
+        if (Def?.BrainScene == null)
+        {
+            GD.Print($"[Character:{EntityId}] SetupBrain skipped: no BrainScene on def.");
+            return;
+        }
+
         var brainRoot = GetNode<Node>(BrainPath);
         foreach (var child in brainRoot.GetChildren()) child.QueueFree();
-        brainRoot.AddChild(Def.BrainScene.Instantiate());
+        var brain = Def.BrainScene.Instantiate();
+        brainRoot.AddChild(brain);
+        GD.Print($"[Character:{EntityId}] SetupBrain attached '{brain.Name}' from '{Def.BrainScene.ResourcePath}'.");
     }
 
     public void ApplyDefinition()
     {
+        GD.Print($"[Character:{EntityId}] ApplyDefinition for DefId={Def?.Id ?? "<null>"}.");
         _stats.Configure(Def.Stats);
         _inventory.Configure(Def.Inventory);
         foreach (var item in Def.EquipmentSet) _equipment.Equip(item);

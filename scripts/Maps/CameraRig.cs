@@ -12,12 +12,21 @@ public partial class CameraRig : Node3D
 
     public override void _Ready()
     {
+        GD.Print($"[CameraRig] Ready. TargetPath='{TargetPath}', Offset={Offset}, FollowLerp={FollowLerp}");
         ResolveTarget();
     }
 
     public void ResolveTarget()
     {
-        if (!TargetPath.IsEmpty) _target = GetNodeOrNull<Node3D>(TargetPath);
+        if (TargetPath == null || TargetPath.IsEmpty)
+        {
+            GD.Print("[CameraRig] ResolveTarget: empty target path; camera has no target.");
+            _target = null;
+            return;
+        }
+
+        _target = GetNodeOrNull<Node3D>(TargetPath);
+        GD.Print($"[CameraRig] ResolveTarget: path='{TargetPath}', found={_target != null}");
     }
 
     public override void _Process(double delta)
